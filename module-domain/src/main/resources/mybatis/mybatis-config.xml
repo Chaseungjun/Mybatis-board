@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="cacheEnabled" value="false"/>   <!-- Mybatis의 cache 기능은 설정하지 않으면 기본이 on 상태입니다. -->
+        <setting name="localCacheScope" value="STATEMENT"/>
+    </settings>
+
+</configuration>
