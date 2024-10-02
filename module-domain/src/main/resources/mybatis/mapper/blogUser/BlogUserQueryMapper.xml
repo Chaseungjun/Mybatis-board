@@ -1,0 +1,26 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.bloguser.BlogUserQueryMapper">
+
+    <!-- 사용자 ID로 블로그 사용자 조회 -->
+    <select id="findBlogUserByUserId" parameterType="String" resultType="com.study.domain.blogUser.entity.BlogUser">
+        SELECT * FROM bloguser WHERE userId = #{userId}
+    </select>
+
+    <!-- 사용자 ID 존재 여부 확인 -->
+    <select id="existsByUserId" parameterType="String" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM bloguser WHERE userId = #{userId})
+    </select>
+
+    <!-- 닉네임 존재 여부 확인 -->
+    <select id="existsByNickname" parameterType="String" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM bloguser WHERE nickname = #{nickname})
+    </select>
+
+    <!-- 이메일 존재 여부 확인 -->
+    <select id="existsBlogUserByEmail" parameterType="String" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM bloguser WHERE email = #{email})
+    </select>
+
+
+
+</mapper>

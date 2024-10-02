@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.bloguser.BlogUserCommandMapper">
+
+
+    <sql id="BlogUserColumns">
+        userId,
+        password,
+        email,
+        userName,
+        nickName,
+        phoneNumber,
+        profileImageUrl
+    </sql>
+
+    <insert id="save" parameterType="com.study.domain.blogUser.entity.BlogUser">
+
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+        insert into bloguser (<include refid="BlogUserColumns"/>)
+        values (
+        #{blogUser.userId},
+        #{blogUser.password},
+        #{blogUser.email},
+        #{blogUser.userName},
+        #{blogUser.nickName},
+        #{blogUser.phoneNumber},
+        #{blogUser.profileImageUrl}
+        )
+    </insert>
+
+</mapper>
