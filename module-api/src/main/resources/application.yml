@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: module-api
+  profiles:
+    include:
+      - mail
+      - aws
+
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/study_project
+    username: root
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+

@@ -1,0 +1,16 @@
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3:
+      bucket: studyprojects3
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+default:
+  profile:
+    image:
+      url: https://studyprojects3.s3.ap-northeast-2.amazonaws.com/%EC%82%AC%EC%A7%84.png
