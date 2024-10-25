@@ -5,7 +5,9 @@ spring:
     include:
       - mail
       - aws
-
+      - jwt
+      - redis
+      - cookie
 
   datasource:
     url: jdbc:mysql://localhost:3306/study_project

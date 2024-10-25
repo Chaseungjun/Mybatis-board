@@ -1,0 +1,8 @@
+jwt:
+  header: Authorization
+  secret: ${JWT_SECRET}
+  token-start-with: Bearer
+  token-validity-in-seconds: 604800  # 7일
+  refresh-token-validity-in-seconds: 2592000  # 30일
+  jwt-issuer: study-project
+  clock-skew-in-seconds: 30
