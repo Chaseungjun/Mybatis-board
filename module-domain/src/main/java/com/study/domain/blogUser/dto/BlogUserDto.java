@@ -135,4 +135,21 @@ public class BlogUserDto {
         }
     }
 
+    @Builder
+    public record BlogUserSignInRequestDto(
+            /**
+             * 사용자의 ID입니다.
+             */
+            @NotBlank
+            @Schema(description = "사용자의 ID입니다.", example = "user123")
+            String userId,
+
+            /**
+             * 사용자의 비밀번호입니다.
+             */
+            @NotBlank
+            @Schema(description = "사용자의 비밀번호입니다.", example = "Password1!")
+            String password
+    ) {
+    }
 }
