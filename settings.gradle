@@ -1,0 +1,5 @@
+rootProject.name = 'mb-muti'
+
+include 'module-api'
+include 'module-domain'
+include 'module-common'
