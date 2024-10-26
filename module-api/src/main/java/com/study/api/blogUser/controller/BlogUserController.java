@@ -117,6 +117,31 @@ public class BlogUserController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 사용자 로그인 요청을 처리합니다.
+     *
+     * @param request 로그인 요청 정보
+     * @param response HTTP 응답 객체
+     * @return 로그인 성공 시 빈 응답
+     */
+    @Operation(
+            method = "POST",
+            summary = "로그인",
+            description = "사용자의 아이디와 비밀번호를 입력하여 로그인합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "로그인 성공"),
+            @ApiResponse(responseCode = "401", description = "비밀번호가 일치하지 않습니다."),
+            @ApiResponse(responseCode = "404", description = "유저가 존재하지 않습니다.")
+    })
+    @PostMapping("/login")
+    public ResponseEntity<Void> signIn(
+            @RequestBody @Valid BlogUserDto.BlogUserSignInRequestDto request,
+            HttpServletResponse response
+    ) {
+        signInService.signIn(response, request);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }
