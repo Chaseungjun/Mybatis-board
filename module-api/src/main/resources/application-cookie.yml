@@ -1,0 +1,4 @@
+custom:
+  cookie:
+    domain: localhost
+    sameSite: None

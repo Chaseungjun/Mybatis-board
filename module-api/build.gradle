@@ -35,6 +35,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-web'
 
+	//security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	// 파일 업로드를 위한 의존성 추가
@@ -54,6 +57,21 @@ dependencies {
 	implementation 'commons-io:commons-io:2.6'
 	implementation 'commons-fileupload:commons-fileupload:1.4'
 
+
+	//jwt
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+	testImplementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	testImplementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	testImplementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+	testImplementation 'org.mockito:mockito-core:3.6.28'
+	testImplementation 'org.mockito:mockito-junit-jupiter:3.6.28'
+
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
 	// Mockito
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
