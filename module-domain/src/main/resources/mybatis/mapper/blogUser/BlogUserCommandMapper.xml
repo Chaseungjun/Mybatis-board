@@ -30,4 +30,7 @@
         )
     </insert>
 
+    <update id="withdraw" parameterType="com.study.domain.blogUser.entity.BlogUser">
+        UPDATE bloguser SET deleted_at = NOW() WHERE userId = #{blogUser.userId}
+    </update>
 </mapper>

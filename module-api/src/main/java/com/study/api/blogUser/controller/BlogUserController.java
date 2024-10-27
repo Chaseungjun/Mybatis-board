@@ -143,5 +143,48 @@ public class BlogUserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * 로그아웃 요청을 처리합니다.
+     *
+     * @param response HTTP 응답 객체
+     * @param userId 현재 로그인 중인 사용자 ID
+     * @return HTTP 상태 코드 204 (No Content) 로그아웃 성공
+     */
+    @Operation(
+            summary = "로그아웃",
+            description = "현재 로그인 중인 사용자가 로그아웃을 수행합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<Void> signOut(HttpServletResponse response, @AuthenticatedUserId String userId) {
+        signOutService.signOut(response, userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 회원탈퇴 요청을 처리합니다.
+     *
+     * @param userId 현재 로그인 중인 사용자 ID
+     * @return HTTP 상태 코드 204 (No Content) 회원탈퇴 성공
+     */
+    @Operation(
+            summary = "회원탈퇴",
+            description = "현재 로그인 중인 사용자가 자신의 계정을 탈퇴합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "회원탈퇴 성공"),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 요청 또는 인증 실패"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Void> withdraw(@AuthenticatedUserId String userId){
+        blogUserWithdrawService.withdrawBlogUser(userId);
+        blogWithdrawService.withdraw(userId);
+        return ResponseEntity.noContent().build();
+    }
 
 }

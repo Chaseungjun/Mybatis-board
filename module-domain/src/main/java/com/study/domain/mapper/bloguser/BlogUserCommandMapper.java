@@ -10,6 +10,6 @@ public interface BlogUserCommandMapper {
 
     long save(@Param("blogUser") BlogUser blogUser);
 
-
+    void withdraw(@Param("blogUser") BlogUser blogUser);
 
 }
