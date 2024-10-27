@@ -1,0 +1,62 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.post.PostCommandMapper">
+
+
+    <sql id="PostColumns">
+        blog_id,
+        userId,
+        nickName,
+        title,
+        content
+    </sql>
+
+
+    <insert id="register" parameterType="com.study.domain.post.entity.Post">
+
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+        INSERT INTO post (<include refid="PostColumns"/>)
+        values (
+        #{blogId},
+        #{userId},
+        #{nickName},
+        #{title},
+        #{content}
+        )
+    </insert>
+
+    <insert id="registerImages" parameterType="com.study.domain.post.dto.PostDto$RegisterFileDto">
+
+        INSERT INTO uploadFile (post_id, file_url)
+        VALUES
+        <foreach collection="fileUrls" item="fileUrl" separator=",">
+            (#{postId}, #{fileUrl})
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE post set title = #{title},
+                        content = #{content}
+        WHERE id = #{postId}
+    </update>
+
+    <update id="updateFileUrls" parameterType="java.util.List">
+
+        INSERT INTO uploadFile (post_id, file_url)
+        VALUES
+        <foreach collection="fileUrls" item="fileUrl" separator=",">
+            (#{postId}, #{fileUrl})
+        </foreach>
+    </update>
+
+    <delete id="deleteFilesByPostId" parameterType="long">
+        DELETE FROM uploadFile
+        WHERE post_id = #{postId}
+    </delete>
+
+    <update id="deleteByPostId" parameterType="com.study.domain.post.entity.Post">
+        UPDATE post SET deleted_at = NOW() where id = #{postId}
+    </update>
+</mapper>
