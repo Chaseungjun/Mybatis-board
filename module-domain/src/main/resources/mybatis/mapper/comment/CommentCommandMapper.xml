@@ -1,0 +1,27 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.comment.CommentCommandMapper">
+
+    <insert id="save" parameterType="com.study.domain.comment.entity.Comment">
+        INSERT INTO comments (blog_id, post_id, userId, content)
+        VALUES (#{comment.blogId}, #{comment.postId}, #{comment.userId}, #{comment.content})
+    </insert>
+
+    <update id="update">
+        UPDATE comments
+        SET content = #{content}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteByPostId" parameterType="int">
+        UPDATE comments
+        SET deleted_at = NOW()
+        WHERE post_id = #{postId}
+    </update>
+
+
+    <update id="delete">
+        UPDATE comments
+        SET deleted_at = NOW()
+        WHERE id = #{id}
+    </update>
+</mapper>
