@@ -6,8 +6,12 @@ import com.study.common.exception.post.NotExistPostException;
 import com.study.common.exception.user.NotFoundUserException;
 import com.study.domain.blog.entity.Blog;
 import com.study.domain.blogUser.entity.BlogUser;
+import com.study.domain.comment.dto.CommentDto;
+import com.study.domain.comment.entity.Comment;
 import com.study.domain.mapper.blog.BlogQueryMapper;
 import com.study.domain.mapper.bloguser.BlogUserQueryMapper;
+import com.study.domain.mapper.comment.CommentCommandMapper;
+import com.study.domain.mapper.comment.CommentQueryMapper;
 import com.study.domain.mapper.post.PostCommandMapper;
 import com.study.domain.mapper.post.PostQueryMapper;
 import com.study.domain.post.dto.Pagination;
@@ -35,6 +39,8 @@ public class PostService {
     private final PostQueryMapper postQueryMapper;
     private final BlogUserQueryMapper blogUserQueryMapper;
     private final BlogQueryMapper blogQueryMapper;
+    private final CommentCommandMapper commentCommandMapper;
+    private final CommentQueryMapper commentQueryMapper;
     private final S3Uploader s3Uploader;
 
     @Transactional
@@ -42,9 +48,6 @@ public class PostService {
 
         BlogUser blogUser = blogUserQueryMapper.findBlogUserByUserId(userId).orElseThrow(() -> new NotFoundUserException(userId));
         Blog blog = blogQueryMapper.findBlogByUserId(userId);
-
-
-        log.info("blogUser={}", blogUser);
         List<String> postImageUrlList = null;
 
         if (files != null && !files.isEmpty()) {
@@ -62,7 +65,6 @@ public class PostService {
             PostDto.RegisterFileDto registerFileDto = new PostDto.RegisterFileDto(post.getId(), postImageUrlList);
             postCommandMapper.registerImages(registerFileDto);
         }
-
         return PostDto.PostResponse.fromPost(post, List.of(), postImageUrlList);
     }
 
@@ -98,18 +100,25 @@ public class PostService {
         Post post = postQueryMapper.findPostById(postId).orElseThrow(NotExistPostException::new);
         validateWriter(post, userId);
 
+        commentCommandMapper.deleteByPostId(post.getId());
         postCommandMapper.deleteFilesByPostId(post.getId());
         postCommandMapper.deleteByPostId(post);
     }
 
     @Transactional
-    public PostDto.PostResponse getPostByIdWithAndFiles(long postId) {
+    public PostDto.PostResponse getPostByIdWithCommentsAndFiles(long postId) {
 
         Post post = postQueryMapper.findPostById(postId).orElseThrow(NotExistPostException::new);
         List<String> fileUrls = postQueryMapper.findFileUrlsByPostId(post.getId());
-        return PostDto.PostResponse.fromPost(post, fileUrls);
-    }
+        List<Comment> comments = commentQueryMapper.getCommentsByPostId(post.getId());
 
+        List<CommentDto.CommentResponseDto> commentResponseDtos = comments.stream()
+                .map(CommentDto.CommentResponseDto::of)
+                .collect(Collectors.toList());
+
+        postCommandMapper.plusViewCount(postId);
+        return PostDto.PostResponse.fromPost(post, commentResponseDtos, fileUrls);
+    }
 
 
     @Transactional(readOnly = true)
@@ -133,7 +142,6 @@ public class PostService {
                 .map(PostDto.PostListDto::of)
                 .collect(Collectors.toList());
 
-        log.info("postList = {}", list);
         return new PagingResponse<>(postListDtos, pagination);
     }
 

@@ -1,8 +1,8 @@
 package com.study.api.post.controller;
 
 
-import com.study.api.post.service.PostService;
 import com.study.api.config.annotation.AuthenticatedUserId;
+import com.study.api.post.service.PostService;
 import com.study.domain.post.dto.PagingResponse;
 import com.study.domain.post.dto.PostDto;
 import com.study.domain.post.dto.SearchDto;
@@ -44,7 +44,6 @@ public class PostController {
     public ResponseEntity<PostDto.PostResponse> register(
             @RequestPart @Valid PostDto.PostRegisterDto postRegisterDto,
             @RequestPart(required = false) List<MultipartFile> files,
-            @RequestParam(required = false) List<String> tags,
             @AuthenticatedUserId String userId
     ){
          return ResponseEntity.ok(postService.register(postRegisterDto, files, userId));
@@ -66,7 +65,6 @@ public class PostController {
     public ResponseEntity<PostDto.PostResponse> update(
             @RequestPart @Valid PostDto.UpdatePostDto updatePostDto,
             @RequestPart(required = false) List<MultipartFile> files,
-            @RequestPart(required = false) List<String> tags,
             @AuthenticatedUserId String userId,
             @PathVariable Long postId
     ){
@@ -105,8 +103,8 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "게시글 조회에 실패했습니다.", content = @Content)
     })
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDto.PostResponse> getPostByIdWithAndFiles(@PathVariable long postId) {
-        return ResponseEntity.ok(postService.getPostByIdWithAndFiles(postId));
+    public ResponseEntity<PostDto.PostResponse> getPostByIdWithCommentsAndFiles(@PathVariable long postId) {
+        return ResponseEntity.ok(postService.getPostByIdWithCommentsAndFiles(postId));
     }
 
 
@@ -126,5 +124,4 @@ public class PostController {
         PagingResponse<PostDto.PostListDto> postList = postService.getPostList(params);
         return ResponseEntity.ok(postList);
     }
-
 }
