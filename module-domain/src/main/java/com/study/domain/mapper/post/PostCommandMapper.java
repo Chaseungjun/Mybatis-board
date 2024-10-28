@@ -27,4 +27,8 @@ public interface PostCommandMapper {
 
     void deleteByPostId(Post post);
 
+    void minusLike(@Param("postId") long postId);
+
+    void addLike(@Param("postId") long postId);
+
 }

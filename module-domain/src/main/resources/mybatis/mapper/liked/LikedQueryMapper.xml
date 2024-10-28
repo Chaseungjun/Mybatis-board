@@ -1,0 +1,12 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.liked.LikedQueryMapper">
+
+    <!-- 사용자 ID와 게시물 ID를 기반으로 좋아요 존재 여부 확인 -->
+    <select id="existsByUserAndPost" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM liked
+        WHERE userId = #{user.userId}
+          AND post_id = #{post.id}
+    </select>
+
+</mapper>
