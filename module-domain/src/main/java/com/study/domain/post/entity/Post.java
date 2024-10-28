@@ -24,6 +24,7 @@ public class Post {
     private String content;
     private String nickName;
     private List<String> fileUrls;
+    private int likeCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private LocalDateTime deletedDate;
@@ -36,6 +37,7 @@ public class Post {
             String title,
             String content,
             List<String> fileUrls,
+            int likeCount,
             LocalDateTime createdDate,
             LocalDateTime modifiedDate,
             LocalDateTime deletedDate
@@ -46,6 +48,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.fileUrls = fileUrls;
+        this.likeCount = likeCount;
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = null;
         this.deletedDate = null;
@@ -60,7 +63,16 @@ public class Post {
                 .content(postRegisterDto.content())
                 .fileUrls(fileUrls)
                 .createdDate(LocalDateTime.now())
+                .likeCount(0)
                 .build();
+    }
+
+    public void plusLikedCount() {
+        likeCount = likeCount + 1;
+    }
+
+    public void minusLikedCount() {
+        likeCount = likeCount - 1;
     }
 
 }
