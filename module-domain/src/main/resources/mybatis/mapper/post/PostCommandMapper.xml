@@ -59,4 +59,17 @@
     <update id="deleteByPostId" parameterType="com.study.domain.post.entity.Post">
         UPDATE post SET deleted_at = NOW() where id = #{postId}
     </update>
+
+    <update id="addLike" parameterType="long">
+        UPDATE post
+        SET liked_count  = liked_count + 1
+        WHERE id = #{postId}
+    </update>
+
+    <update id="minusLike" parameterType="long">
+        UPDATE post
+        SET liked_count  = liked_count - 1
+        WHERE id = #{postId}
+    </update>
+
 </mapper>
