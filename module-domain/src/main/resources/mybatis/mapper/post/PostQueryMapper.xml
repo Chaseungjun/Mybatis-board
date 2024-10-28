@@ -16,9 +16,13 @@
 
     <select id="findPostById" parameterType="long" resultType="com.study.domain.post.entity.Post">
         SELECT
-            <include refid="postColumns" />
+        <include refid="postColumns" />
         FROM post
         WHERE id = #{post.id}
+    </select>
+
+    <select id="findUserIdById" parameterType="long" resultType="com.study.domain.post.entity.Post">
+        SELECT * FROM post WHERE id = #{post.id}
     </select>
 
 
@@ -26,21 +30,27 @@
         SELECT file_url FROM uploadfile WHERE post_id = #{postId}
     </select>
 
+
     <!-- 게시글 리스트 조회 -->
-    <select id="findAll" resultType="com.study.domain.post.entity.Post">
+    <select id="findAll" parameterType="com.study.domain.post.dto.SearchDto" resultType="com.study.domain.post.entity.Post">
         SELECT
-            id,
-            blog_id,
-            userId,
-            nickName,
-            title,
-            created_at,
-            liked_count,
-            comment_count
+        id,
+        blog_id,
+        userId,
+        nickName,
+        title,
+        created_at,
+        liked_count,
+        comment_count
         FROM
-            post
+        post
         WHERE
-            deleted_at IS NULL
+        deleted_at IS NULL
+        <if test="keyword != null and keyword != ''">
+            AND (title LIKE CONCAT ('%', #{keyword}, '%')
+            OR content LIKE CONCAT ('%', #{keyword}, '%')
+            OR nickName LIKE CONCAT ('%', #{keyword}, '%'))
+        </if>
         ORDER BY
             id DESC
         LIMIT #{pagination.limitStart}, #{recordSize}
@@ -48,13 +58,17 @@
 
 
     <!-- 게시글 수 카운팅 -->
-    <select id="count" resultType="int">
+    <select id="count" parameterType="com.study.domain.post.dto.SearchDto" resultType="int">
         SELECT
             COUNT(*)
         FROM
             post
         WHERE
             deleted_at IS NULL
+        <if test="keyword != null and keyword != ''">
+            AND (title LIKE CONCAT ('%', #{keyword}, '%')
+            OR content LIKE CONCAT ('%', #{keyword}, '%')
+            OR nickName LIKE CONCAT ('%', #{keyword}, '%'))
+        </if>
     </select>
-
 </mapper>

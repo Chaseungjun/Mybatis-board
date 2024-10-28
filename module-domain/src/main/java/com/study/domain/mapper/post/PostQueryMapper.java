@@ -1,5 +1,6 @@
 package com.study.domain.mapper.post;
 
+import com.study.domain.post.dto.SearchDto;
 import com.study.domain.post.entity.Post;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,8 +14,7 @@ public interface PostQueryMapper {
 
     List<String> findFileUrlsByPostId(long postId);
 
-    List<Post> findAll();
+    List<Post> findAll(SearchDto params);
 
-    int count();
-
+    int count(SearchDto params);
 }
