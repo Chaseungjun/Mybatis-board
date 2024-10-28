@@ -72,4 +72,15 @@
         WHERE id = #{postId}
     </update>
 
+    <update id="addCommentCount">
+        UPDATE post
+        SET comment_count = comment_count + 1
+        WHERE id = #{postId}
+    </update>
+
+    <update id="minusCommentCount">
+        UPDATE post
+        SET comment_count = comment_count - 1
+        WHERE id = #{postId}
+    </update>
 </mapper>
