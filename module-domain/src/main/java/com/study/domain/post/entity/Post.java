@@ -28,6 +28,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     private int likeCount;
     private int commentCount;
+    private boolean isPopular;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private LocalDateTime deletedDate;
@@ -42,6 +43,7 @@ public class Post {
             List<String> fileUrls,
             List<Comment> comments,
             int likeCount,
+            boolean isPopular,
             int commentCount,
             LocalDateTime createdDate,
             LocalDateTime modifiedDate,
@@ -55,6 +57,7 @@ public class Post {
         this.fileUrls = fileUrls;
         this.comments = comments;
         this.likeCount = likeCount;
+        this.isPopular = isPopular;
         this.commentCount = commentCount;
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = null;
@@ -70,6 +73,7 @@ public class Post {
                 .content(postRegisterDto.content())
                 .fileUrls(fileUrls)
                 .createdDate(LocalDateTime.now())
+                .isPopular(false)
                 .commentCount(0)
                 .likeCount(0)
                 .build();
@@ -86,5 +90,4 @@ public class Post {
     public void minusLikedCount() {
         likeCount = likeCount - 1;
     }
-
 }
