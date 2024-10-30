@@ -1,12 +1,13 @@
 package com.study.domain.post.entity;
 
+import com.study.domain.comment.entity.Comment;
 import com.study.domain.post.dto.PostDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +25,9 @@ public class Post {
     private String content;
     private String nickName;
     private List<String> fileUrls;
+    private List<Comment> comments = new ArrayList<>();
     private int likeCount;
+    private int commentCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private LocalDateTime deletedDate;
@@ -37,7 +40,9 @@ public class Post {
             String title,
             String content,
             List<String> fileUrls,
+            List<Comment> comments,
             int likeCount,
+            int commentCount,
             LocalDateTime createdDate,
             LocalDateTime modifiedDate,
             LocalDateTime deletedDate
@@ -48,7 +53,9 @@ public class Post {
         this.title = title;
         this.content = content;
         this.fileUrls = fileUrls;
+        this.comments = comments;
         this.likeCount = likeCount;
+        this.commentCount = commentCount;
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = null;
         this.deletedDate = null;
@@ -63,8 +70,13 @@ public class Post {
                 .content(postRegisterDto.content())
                 .fileUrls(fileUrls)
                 .createdDate(LocalDateTime.now())
+                .commentCount(0)
                 .likeCount(0)
                 .build();
+    }
+
+    public int getCommentCount() {
+        return comments.size();
     }
 
     public void plusLikedCount() {

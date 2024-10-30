@@ -1,0 +1,25 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.comment.CommentQueryMapper">
+
+    <select id="findCommentById" parameterType="long" resultType="com.study.domain.comment.entity.Comment">
+        SELECT *
+        FROM comments
+        WHERE id = #{id}
+        AND deleted_at IS NULL
+    </select>
+
+    <select id="getCommentsByPostId" parameterType="long" resultType="com.study.domain.comment.entity.Comment">
+        SELECT *
+        FROM comments
+        WHERE post_id = #{postId}
+        AND deleted_at IS NULL
+    </select>
+
+    <select id="getPostIdByCommentId">
+        SELECT post_id
+        FROM comments
+        WHERE id = #{id}
+          AND deleted_at IS NULL
+    </select>
+
+</mapper>

@@ -1,5 +1,6 @@
 package com.study.domain.post.dto;
 
+import com.study.domain.comment.dto.CommentDto;
 import com.study.domain.post.entity.Post;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -57,17 +58,21 @@ public class PostDto {
             String title,
             String content,
             String userId,
-            List<String> fileUrls
-
+            List<String> fileUrls,
+            List<CommentDto.CommentResponseDto> commentResponseDtos,
+            int likeCount,
+            int commentCount
     ) {
 
-        public static PostResponse fromPost(Post post, List<String> fileUrls) {
+        public static PostResponse fromPost(Post post, List<CommentDto.CommentResponseDto> commentResponseDtos, List<String> fileUrls) {
             return PostResponse.builder()
                     .postId(post.getId())
                     .title(post.getTitle())
                     .content(post.getContent())
                     .fileUrls(fileUrls)
                     .userId(post.getUserId())
+                    .commentResponseDtos(commentResponseDtos)
+                    .likeCount(post.getLikeCount())
                     .build();
         }
     }
@@ -78,6 +83,8 @@ public class PostDto {
             String title,
             String userId,
             String nickName,
+            int likeCount,
+            int commentCount,
             LocalDateTime createdDate
     ) {
         public static PostListDto of(Post post) {
@@ -86,6 +93,8 @@ public class PostDto {
                     .title(post.getTitle())
                     .userId(post.getUserId())
                     .nickName(post.getNickName())
+                    .likeCount(post.getLikeCount())
+                    .commentCount(post.getCommentCount())
                     .build();
         }
     }
