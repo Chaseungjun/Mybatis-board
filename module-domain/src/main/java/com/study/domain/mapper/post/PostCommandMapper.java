@@ -31,6 +31,8 @@ public interface PostCommandMapper {
 
     void addLike(@Param("postId") long postId);
 
+    void updatePopular(@Param("postId") long postId, @Param("isPopular") boolean isPopular);
+
     void addCommentCount(@Param("postId") long postId);
 
     void minusCommentCount(@Param("postId") long postId);
