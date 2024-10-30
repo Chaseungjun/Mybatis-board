@@ -1,8 +1,8 @@
 package com.study.api.post.controller;
 
 
-import com.study.api.config.annotation.AuthenticatedUserId;
 import com.study.api.post.service.PostService;
+import com.study.api.config.annotation.AuthenticatedUserId;
 import com.study.domain.post.dto.PagingResponse;
 import com.study.domain.post.dto.PostDto;
 import com.study.domain.post.dto.SearchDto;
@@ -123,5 +123,23 @@ public class PostController {
     public ResponseEntity<PagingResponse<PostDto.PostListDto>> getPostList(SearchDto params) {
         PagingResponse<PostDto.PostListDto> postList = postService.getPostList(params);
         return ResponseEntity.ok(postList);
+    }
+
+
+    @Operation(
+            method = "GET",
+            summary = "인기글 게시글 리스트 조회",
+            description = "좋아요기 10개 이상인 인기글 게시글 리스트를 가지고 온다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인기글 게시글 리스트 조회 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostDto.PostListDto.class))),
+            @ApiResponse(responseCode = "400", description = "인기글 게시글 리스트 조회에 실패했습니다.", content = @Content)
+    })
+    @GetMapping("/popular")
+    public ResponseEntity<PagingResponse<PostDto.PostListDto>> getPopularPosts(SearchDto params) {
+        PagingResponse<PostDto.PostListDto> popularPosts = postService.getPopularPosts(params);
+        return ResponseEntity.ok(popularPosts);
     }
 }
