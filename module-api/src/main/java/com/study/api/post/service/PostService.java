@@ -19,6 +19,7 @@ import com.study.domain.post.dto.PagingResponse;
 import com.study.domain.post.dto.PostDto;
 import com.study.domain.post.dto.SearchDto;
 import com.study.domain.post.entity.Post;
+import com.study.domain.redis.popularPost.service.PopularPostCacheService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ public class PostService {
     private final CommentCommandMapper commentCommandMapper;
     private final CommentQueryMapper commentQueryMapper;
     private final S3Uploader s3Uploader;
+    private final PopularPostCacheService popularPostCacheService;
 
     @Transactional
     public PostDto.PostResponse register(@Valid PostDto.PostRegisterDto postRegisterDto, List<MultipartFile> files, String userId) {
@@ -108,6 +110,13 @@ public class PostService {
     @Transactional
     public PostDto.PostResponse getPostByIdWithCommentsAndFiles(long postId) {
 
+
+        PostDto.PostResponse cachedPopularPost = popularPostCacheService.getCachedPopularPost(postId);
+        if (cachedPopularPost != null) {
+            log.info("get cachedPopularPost = {}", cachedPopularPost);
+            return popularPostCacheService.getCachedPopularPost(postId);
+        }
+
         Post post = postQueryMapper.findPostById(postId).orElseThrow(NotExistPostException::new);
         List<String> fileUrls = postQueryMapper.findFileUrlsByPostId(post.getId());
         List<Comment> comments = commentQueryMapper.getCommentsByPostId(post.getId());
@@ -116,13 +125,19 @@ public class PostService {
                 .map(CommentDto.CommentResponseDto::of)
                 .collect(Collectors.toList());
 
-        postCommandMapper.plusViewCount(postId);
         return PostDto.PostResponse.fromPost(post, commentResponseDtos, fileUrls);
     }
 
 
     @Transactional(readOnly = true)
     public PagingResponse<PostDto.PostListDto> getPostList(SearchDto params) {
+
+        // 일반 게시글일 경우 id 기준으로 내림차순 정렬
+        if (params.getIsPopular() != null && params.getIsPopular()) {
+            params.setSortBy("likeCount"); // 인기글일 경우 좋아요 수로 정렬
+        } else {
+            params.setSortBy("id"); // 일반 게시글일 경우 id로 정렬
+        }
 
         // 조건에 해당하는 데이터가 없는 경우, 응답 데이터에 비어있는 리스트와 null을 담아 반환
         int count = postQueryMapper.count(params);
@@ -143,6 +158,13 @@ public class PostService {
                 .collect(Collectors.toList());
 
         return new PagingResponse<>(postListDtos, pagination);
+    }
+
+    @Transactional(readOnly = true)
+    public PagingResponse<PostDto.PostListDto> getPopularPosts(SearchDto params) {
+        params.setIsPopular(true); // 인기글만 조회하도록 설정
+        log.info("params.getIsPopular() = {}", params.getIsPopular());
+        return getPostList(params); // 기존 getPostList 메서드 호출
     }
 
     private void validateWriter(Post post, String userId) {

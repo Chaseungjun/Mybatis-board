@@ -72,6 +72,13 @@
         WHERE id = #{postId}
     </update>
 
+
+    <update id="updatePopular">
+        UPDATE post
+        SET is_popular = #{isPopular}
+        WHERE id = #{postId}
+    </update>
+
     <update id="addCommentCount">
         UPDATE post
         SET comment_count = comment_count + 1

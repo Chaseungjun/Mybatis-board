@@ -2,11 +2,13 @@ package com.study.domain.post.dto;
 
 import com.study.domain.comment.dto.CommentDto;
 import com.study.domain.post.entity.Post;
+import com.study.domain.redis.popularPost.entity.PopularPost;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Post에 대한 데이터 전송 객체(DTO)입니다.
@@ -61,7 +63,8 @@ public class PostDto {
             List<String> fileUrls,
             List<CommentDto.CommentResponseDto> commentResponseDtos,
             int likeCount,
-            int commentCount
+            int commentCount,
+            boolean isPopular
     ) {
 
         public static PostResponse fromPost(Post post, List<CommentDto.CommentResponseDto> commentResponseDtos, List<String> fileUrls) {
@@ -73,6 +76,27 @@ public class PostDto {
                     .userId(post.getUserId())
                     .commentResponseDtos(commentResponseDtos)
                     .likeCount(post.getLikeCount())
+                    .isPopular(false)
+                    .build();
+        }
+
+        public static PostResponse fromPopularPost(PopularPost popularPost) {
+            List<CommentDto.CommentResponseDto> commentResponseDtoList = popularPost.getComments().stream().map(
+                    CommentDto.CommentResponseDto::of
+            ).collect(Collectors.toList());
+
+            return PostResponse.builder()
+                    .postId(popularPost.getPostId())
+                    .title(popularPost.getTitle())
+                    .content(popularPost.getContent())
+                    .fileUrls(popularPost.getFileUrls())
+                    .userId(popularPost.getUserId())
+                    .commentResponseDtos(commentResponseDtoList)
+                    .likeCount(popularPost.getLikeCount())
+                    .commentCount(popularPost.getCommentCount())
+                    .isPopular(true)
+                    .likeCount(popularPost.getLikeCount())
+                    .commentCount(popularPost.getCommentCount())
                     .build();
         }
     }
