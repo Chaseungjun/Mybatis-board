@@ -10,4 +10,5 @@ public interface LikedQueryMapper {
 
     boolean existsByUserAndPost(@Param("user") BlogUser user, @Param("post") Post post);
 
+    boolean checkIsPopular(@Param("post") Post post);
 }

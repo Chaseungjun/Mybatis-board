@@ -13,6 +13,7 @@ import com.study.domain.mapper.liked.LikedQueryMapper;
 import com.study.domain.mapper.post.PostCommandMapper;
 import com.study.domain.mapper.post.PostQueryMapper;
 import com.study.domain.post.entity.Post;
+import com.study.domain.redis.popularPost.service.PopularPostCacheService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class LikedService {
     private final PostQueryMapper postQueryMapper;
     private final PostCommandMapper postCommandMapper;
     private final BlogUserQueryMapper blogUserQueryMapper;
+    private final PopularPostCacheService popularPostCacheService;
 
     @Transactional
     public void addLike(int postId, String userId) {
@@ -39,6 +41,7 @@ public class LikedService {
             likedCommandMapper.save(new Liked(blogUser.getUserId(), post.getId()));
             post.plusLikedCount();
             postCommandMapper.addLike(postId);
+            checkIsPopularAndCache(post);
         } else {
             throw new PostLikedException(ErrorCode.POST_LIKE_FAIL_EXCEPTION);
         }
@@ -53,6 +56,7 @@ public class LikedService {
             likedCommandMapper.deleteLikesByUserAndPost(blogUser, post);
             post.minusLikedCount();
             postCommandMapper.minusLike(postId);
+            checkIsPopularAndCache(post);
         } else {
             throw new PostDeleteLikeException(ErrorCode.POST_DELETE_LIKE_FAIL_EXCEPTION);
         }
@@ -60,6 +64,17 @@ public class LikedService {
 
     private boolean checkLikeExist(BlogUser user, Post post) {
         return likedQueryMapper.existsByUserAndPost(user, post);
+    }
+
+    private void checkIsPopularAndCache(Post post){
+        boolean isPopular = likedQueryMapper.checkIsPopular(post);
+        postCommandMapper.updatePopular(post.getId(), isPopular);
+
+        if (isPopular){
+            popularPostCacheService.cachePopularPost(post);
+        } else {
+            popularPostCacheService.removePopularPostCache(post.getId());
+        }
     }
 }
 

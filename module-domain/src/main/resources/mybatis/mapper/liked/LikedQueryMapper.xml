@@ -9,4 +9,13 @@
           AND post_id = #{post.id}
     </select>
 
+    <select id="checkIsPopular" parameterType="com.study.domain.post.entity.Post" resultType="boolean">
+        SELECT
+            CASE
+                WHEN liked_count >= 1 THEN TRUE
+                ELSE FALSE
+                END
+        FROM post
+        WHERE id = #{post.id}
+    </select>
 </mapper>
