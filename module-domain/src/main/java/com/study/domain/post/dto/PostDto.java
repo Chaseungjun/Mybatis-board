@@ -64,6 +64,7 @@ public class PostDto {
             List<CommentDto.CommentResponseDto> commentResponseDtos,
             int likeCount,
             int commentCount,
+            int viewCount,
             boolean isPopular
     ) {
 
@@ -76,6 +77,7 @@ public class PostDto {
                     .userId(post.getUserId())
                     .commentResponseDtos(commentResponseDtos)
                     .likeCount(post.getLikeCount())
+                    .viewCount(post.getViewCount())
                     .isPopular(false)
                     .build();
         }
@@ -94,6 +96,7 @@ public class PostDto {
                     .commentResponseDtos(commentResponseDtoList)
                     .likeCount(popularPost.getLikeCount())
                     .commentCount(popularPost.getCommentCount())
+                    .viewCount(popularPost.getViewCount())
                     .isPopular(true)
                     .likeCount(popularPost.getLikeCount())
                     .commentCount(popularPost.getCommentCount())
@@ -109,6 +112,7 @@ public class PostDto {
             String nickName,
             int likeCount,
             int commentCount,
+            int viewCount,
             LocalDateTime createdDate
     ) {
         public static PostListDto of(Post post) {
@@ -119,6 +123,7 @@ public class PostDto {
                     .nickName(post.getNickName())
                     .likeCount(post.getLikeCount())
                     .commentCount(post.getCommentCount())
+                    .viewCount(post.getViewCount())
                     .build();
         }
     }
