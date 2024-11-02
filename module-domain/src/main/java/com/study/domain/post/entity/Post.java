@@ -28,6 +28,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     private int likeCount;
     private int commentCount;
+    private int viewCount;
     private boolean isPopular;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -45,6 +46,7 @@ public class Post {
             int likeCount,
             boolean isPopular,
             int commentCount,
+            int viewCount,
             LocalDateTime createdDate,
             LocalDateTime modifiedDate,
             LocalDateTime deletedDate
@@ -75,6 +77,7 @@ public class Post {
                 .createdDate(LocalDateTime.now())
                 .isPopular(false)
                 .commentCount(0)
+                .viewCount(0)
                 .likeCount(0)
                 .build();
     }
@@ -89,5 +92,9 @@ public class Post {
 
     public void minusLikedCount() {
         likeCount = likeCount - 1;
+    }
+
+    public void plusVieCount(){
+        viewCount = viewCount + 1;
     }
 }

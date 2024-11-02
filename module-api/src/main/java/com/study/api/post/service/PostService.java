@@ -46,7 +46,7 @@ public class PostService {
     private final PopularPostCacheService popularPostCacheService;
 
     @Transactional
-    public PostDto.PostResponse register(@Valid PostDto.PostRegisterDto postRegisterDto, List<MultipartFile> files, String userId) {
+    public PostDto.PostResponse register(@Valid PostDto.PostRegisterDto postRegisterDto, List<MultipartFile> files, List<String> tags, String userId) {
 
         BlogUser blogUser = blogUserQueryMapper.findBlogUserByUserId(userId).orElseThrow(() -> new NotFoundUserException(userId));
         Blog blog = blogQueryMapper.findBlogByUserId(userId);
@@ -72,7 +72,7 @@ public class PostService {
 
 
     @Transactional
-    public PostDto.PostResponse update(@Valid PostDto.UpdatePostDto updatePostDto, List<MultipartFile> files, String userId, long postId) {
+    public PostDto.PostResponse update(@Valid PostDto.UpdatePostDto updatePostDto, List<MultipartFile> files, List<String> tags, String userId, long postId) {
 
         Post post = postQueryMapper.findPostById(postId).orElseThrow(NotExistPostException::new);
 
@@ -114,6 +114,7 @@ public class PostService {
         PostDto.PostResponse cachedPopularPost = popularPostCacheService.getCachedPopularPost(postId);
         if (cachedPopularPost != null) {
             log.info("get cachedPopularPost = {}", cachedPopularPost);
+            postCommandMapper.plusViewCount(postId);
             return popularPostCacheService.getCachedPopularPost(postId);
         }
 
@@ -125,6 +126,7 @@ public class PostService {
                 .map(CommentDto.CommentResponseDto::of)
                 .collect(Collectors.toList());
 
+        postCommandMapper.plusViewCount(postId);
         return PostDto.PostResponse.fromPost(post, commentResponseDtos, fileUrls);
     }
 

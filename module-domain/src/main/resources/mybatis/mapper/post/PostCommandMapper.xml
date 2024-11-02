@@ -90,4 +90,11 @@
         SET comment_count = comment_count - 1
         WHERE id = #{postId}
     </update>
+
+    <update id="plusViewCount">
+        UPDATE post
+        SET view_count = view_count + 1
+        WHERE id = #{postId}
+    </update>
+
 </mapper>

@@ -27,6 +27,7 @@ public class PopularPost {
     private List<Comment> comments;
     private int likeCount;
     private int commentCount;
+    private int viewCount;
     private boolean isPopular;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -45,6 +46,7 @@ public class PopularPost {
             List<Comment> comments,
             int likeCount,
             int commentCount,
+            int viewCount,
             boolean isPopular,
             LocalDateTime createdDate,
             LocalDateTime modifiedDate,
@@ -60,6 +62,7 @@ public class PopularPost {
         this.comments = comments;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
+        this.viewCount = viewCount;
         this.isPopular = isPopular;
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = null;
