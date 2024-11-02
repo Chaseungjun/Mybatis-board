@@ -36,4 +36,6 @@ public interface PostCommandMapper {
     void addCommentCount(@Param("postId") long postId);
 
     void minusCommentCount(@Param("postId") long postId);
+
+    void plusViewCount(@Param("postId") long postId);
 }
