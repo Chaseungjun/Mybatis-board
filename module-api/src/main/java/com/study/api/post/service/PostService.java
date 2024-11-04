@@ -14,6 +14,9 @@ import com.study.domain.mapper.comment.CommentCommandMapper;
 import com.study.domain.mapper.comment.CommentQueryMapper;
 import com.study.domain.mapper.post.PostCommandMapper;
 import com.study.domain.mapper.post.PostQueryMapper;
+import com.study.domain.mapper.postTag.PostTagCommandMapper;
+import com.study.domain.mapper.tag.TagCommandMapper;
+import com.study.domain.mapper.tag.TagQueryMapper;
 import com.study.domain.post.dto.Pagination;
 import com.study.domain.post.dto.PagingResponse;
 import com.study.domain.post.dto.PostDto;
@@ -42,6 +45,9 @@ public class PostService {
     private final BlogQueryMapper blogQueryMapper;
     private final CommentCommandMapper commentCommandMapper;
     private final CommentQueryMapper commentQueryMapper;
+    private final TagCommandMapper tagCommandMapper;
+    private final TagQueryMapper tagQueryMapper;
+    private final PostTagCommandMapper postTagCommandMapper;
     private final S3Uploader s3Uploader;
     private final PopularPostCacheService popularPostCacheService;
 
@@ -62,6 +68,7 @@ public class PostService {
 
         postCommandMapper.register(post);
         Post savedPost = postQueryMapper.findPostById(post.getId()).orElseThrow(NotExistPostException::new);
+        registerTag(tags, savedPost);
 
         if (postImageUrlList != null) {
             PostDto.RegisterFileDto registerFileDto = new PostDto.RegisterFileDto(post.getId(), postImageUrlList);
@@ -91,6 +98,9 @@ public class PostService {
         if (postImageUrlList != null && !postImageUrlList.isEmpty()) {
             postCommandMapper.updateFileUrls(postImageUrlList, postId);
         }
+
+        postTagCommandMapper.deletePostTagsByPostId(post.getId());
+        registerTag(tags, post);
 
         Post upatedPost = postQueryMapper.findPostById(postId).orElseThrow(NotExistPostException::new);
 
@@ -172,6 +182,26 @@ public class PostService {
     private void validateWriter(Post post, String userId) {
         if (!post.getUserId().equals(userId)) {
             throw new NotAuthenticationException(userId);
+        }
+    }
+
+    private void registerTag(List<String> tags, Post post) {
+
+        if (tags == null || tags.isEmpty()) {
+            return;
+        }
+        List<String> existingTagNames = tagQueryMapper.findExistingTagNames(tags);
+        List<String> newTags = tags.stream()
+                .filter(tag -> !existingTagNames.contains(tag))
+                .collect(Collectors.toList());
+
+        if (!newTags.isEmpty()) {
+            tagCommandMapper.registerTag(newTags);
+        }
+
+        List<Integer> tagsId = tagQueryMapper.findTagIdsByNames(tags);
+        if (!tagsId.isEmpty()) {
+            postTagCommandMapper.registerPostTags(post.getId(), tagsId);
         }
     }
 }

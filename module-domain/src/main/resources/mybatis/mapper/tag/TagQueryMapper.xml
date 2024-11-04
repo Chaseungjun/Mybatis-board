@@ -1,0 +1,24 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.tag.TagQueryMapper">
+
+    <!-- 여러 태그 이름에 대한 태그 ID들을 조회하는 쿼리 -->
+    <select id="findTagIdsByNames" resultType="int">
+        SELECT id
+        FROM tag
+        WHERE tagName IN
+        <foreach item="tagName" collection="tags" open="(" separator="," close=")">
+            #{tagName}
+        </foreach>
+    </select>
+
+    <!-- 이미 존재하는 태그 이름을 조회하는 쿼리 -->
+    <select id="findExistingTagNames" resultType="string">
+        SELECT tagName
+        FROM tag
+        WHERE tagName IN
+        <foreach item="tagName" collection="tags" open="(" separator="," close=")">
+            #{tagName}
+        </foreach>
+    </select>
+
+</mapper>

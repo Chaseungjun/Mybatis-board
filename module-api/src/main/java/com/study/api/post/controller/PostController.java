@@ -44,9 +44,10 @@ public class PostController {
     public ResponseEntity<PostDto.PostResponse> register(
             @RequestPart @Valid PostDto.PostRegisterDto postRegisterDto,
             @RequestPart(required = false) List<MultipartFile> files,
+            @RequestPart(required = false) List<String> tags,
             @AuthenticatedUserId String userId
     ){
-         return ResponseEntity.ok(postService.register(postRegisterDto, files, userId));
+        return ResponseEntity.ok(postService.register(postRegisterDto, files, tags, userId));
     }
 
     @Operation(
@@ -65,10 +66,11 @@ public class PostController {
     public ResponseEntity<PostDto.PostResponse> update(
             @RequestPart @Valid PostDto.UpdatePostDto updatePostDto,
             @RequestPart(required = false) List<MultipartFile> files,
+            @RequestPart(required = false) List<String> tags,
             @AuthenticatedUserId String userId,
             @PathVariable Long postId
     ){
-        PostDto.PostResponse updatedPost = postService.update(updatePostDto, files, userId, postId);
+        PostDto.PostResponse updatedPost = postService.update(updatePostDto, files, tags, userId, postId);
         return ResponseEntity.ok(updatedPost);
     }
 

@@ -1,0 +1,16 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.postTag.PostTagCommandMapper">
+
+    <!-- 포스트와 태그의 매핑 관계를 등록하는 쿼리 -->
+    <insert id="registerPostTags" parameterType="map">
+        INSERT INTO posttag (post_Id, tag_Id)
+        VALUES
+        <foreach collection="tagIds" item="tagId" separator=",">
+            (#{postId}, #{tagId})
+        </foreach>
+    </insert>
+
+    <delete id="deletePostTagsByPostId">
+        DELETE FROM posttag WHERE post_id = #{postId}
+    </delete>
+</mapper>
