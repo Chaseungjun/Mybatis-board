@@ -144,4 +144,22 @@ public class PostController {
         PagingResponse<PostDto.PostListDto> popularPosts = postService.getPopularPosts(params);
         return ResponseEntity.ok(popularPosts);
     }
+
+
+    @Operation(
+            method = "GET",
+            summary = "태그로 게시글 리스트 조회",
+            description = "동일한 태그가 달린 게시글 리스트를 가지고 온다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "태그 게시글 리스트 조회 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostDto.PostListDto.class))),
+            @ApiResponse(responseCode = "400", description = "태그 리스트 조회에 실패했습니다.", content = @Content)
+    })
+    @GetMapping("/tag/{tagName}")
+    public ResponseEntity<PagingResponse<PostDto.PostListDto>> getPostsByTag(@PathVariable String tagName, SearchDto params) {
+        PagingResponse<PostDto.PostListDto> postList = postService.getPostsByTag(tagName, params);
+        return ResponseEntity.ok(postList);
+    }
 }
