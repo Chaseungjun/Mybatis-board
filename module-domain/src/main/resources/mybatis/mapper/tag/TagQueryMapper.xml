@@ -21,4 +21,9 @@
         </foreach>
     </select>
 
+    <select id="findTagIdByName" resultType="int">
+        SELECT id
+        FROM tag
+        WHERE tagName = #{tagName}
+    </select>
 </mapper>
