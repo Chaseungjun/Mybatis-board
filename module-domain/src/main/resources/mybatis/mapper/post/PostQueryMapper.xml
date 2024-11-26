@@ -71,4 +71,24 @@
             OR nickName LIKE CONCAT ('%', #{keyword}, '%'))
         </if>
     </select>
+
+    <!-- 태그 id로 게시글 조회 -->
+    <select id="findPostsByTagId" resultType="com.study.domain.post.entity.Post">
+        SELECT p.*
+        FROM post p
+                JOIN posttag pt ON p.id = pt.post_id
+        WHERE
+            pt.tag_id = #{tagId}
+        ORDER BY
+            p.id DESC
+        LIMIT #{pagination.limitStart}, #{recordSize}
+    </select>
+
+    <!-- 태그 검색 게시글 수 카운팅 -->
+    <select id="countPostsByTagId" resultType="int">
+        SELECT COUNT(*)
+        FROM post p
+                 JOIN posttag pt ON p.id = pt.post_Id
+        WHERE pt.tag_Id = #{tagId}
+    </select>
 </mapper>
