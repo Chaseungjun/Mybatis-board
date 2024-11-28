@@ -1,0 +1,10 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.domain.mapper.notification.NotificationQueryMapper">
+
+    <select id="findById" parameterType="long" resultType="com.study.domain.notification.entity.Notification">
+        SELECT *
+        FROM notification
+        WHERE id = #{id}
+    </select>
+
+</mapper>
